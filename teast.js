@@ -63,6 +63,42 @@ async function fetchProductsByCategory(categoryId) {
 }
 
 // ################################# Add to Cart Button ###############################################
+function updateCart() {
+  const container = document.getElementById("cart-items");
+  container.innerHTML = "";
+
+  if (cart.length === 0) {
+    container.innerHTML = `<p class="text-gray-500">Your cart is empty.</p>`;
+    document.getElementById("cart-total").innerText = "৳0";
+    return;
+  }
+
+  cart.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "flex justify-between items-center mb-2 border-b pb-2";
+
+    div.innerHTML = `
+      <span>${item.name} x ${item.quantity}</span>
+      <div>
+        <span>৳${(item.price * item.quantity).toFixed(2)}</span>
+        <button class="ml-2 text-red-500 remove-item" data-index="${index}">&times;</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  document.getElementById("cart-total").innerText = `৳${totalPrice.toFixed(2)}`;
+
+  // Remove item button
+  document.querySelectorAll(".remove-item").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const index = parseInt(btn.getAttribute("data-index"));
+      totalPrice -= cart[index].price * cart[index].quantity;
+      cart.splice(index, 1);
+      updateCart();
+    });
+  });
+}
 
 // ✅ Load Categories
 async function loadCategories() {
@@ -94,152 +130,8 @@ async function loadCategories() {
     console.error("Failed to load categories:", error);
   }
 }
-// ####################################################################################################################### cart btn##############################################
-document.addEventListener("DOMContentLoaded", function () {
-  const productContainer = document.getElementById("product-container");
-  const cartItemsContainer = document.querySelector(".cart-items");
-  const cartTotal = document.querySelector(".cart-total");
 
-  let total = 0;
-
-  // Add to cart
-  productContainer.addEventListener("click", function (event) {
-    if (event.target.classList.contains("add-to-cart")) {
-      const button = event.target;
-      const name = button.getAttribute("data-product-name");
-      const price = parseInt(button.getAttribute("data-product-price"));
-
-      // Create cart item div
-      const cartItem = document.createElement("div");
-      cartItem.classList.add(
-        "flex",
-        "justify-between",
-        "items-center",
-        "mb-2",
-        "bg-green-100",
-        "p-2",
-        "rounded"
-      );
-
-      cartItem.innerHTML = `
-        <span>${name}</span>
-        <span>৳${price}</span>
-        <button class="remove-item text-red-500 font-bold ml-2">×</button>
-      `;
-
-      // Save price as data attribute for later removal
-      cartItem.setAttribute("data-price", price);
-
-      cartItemsContainer.appendChild(cartItem);
-
-      // Update total
-      total += price;
-      cartTotal.textContent = `৳${total}`;
-    }
-  });
-
-  // Remove from cart
-  cartItemsContainer.addEventListener("click", function (event) {
-    if (event.target.classList.contains("remove-item")) {
-      const cartItem = event.target.parentElement;
-      const price = parseInt(cartItem.getAttribute("data-price"));
-
-      // Remove item from DOM
-      cartItemsContainer.removeChild(cartItem);
-
-      // Update total
-      total -= price;
-      cartTotal.textContent = `৳${total}`;
-    }
-  });
-});
-
-// ####################################################################################################################### cart btn end ##############################################
-document.addEventListener("DOMContentLoaded", function () {
-  const productContainer = document.getElementById("product-container");
-  const cartItemsContainer = document.querySelector(".cart-items");
-  const cartTotal = document.querySelector(".cart-total");
-  const showCartButton = document.getElementById("yourCartBTN");
-
-  const cart = [];
-
-  function updateCartUI() {
-    cartItemsContainer.innerHTML = "";
-
-    if (cart.length === 0) {
-      cartItemsContainer.innerHTML =
-        "<p class='text-gray-500'>কার্টে কিছু নেই</p>";
-      cartTotal.textContent = `৳0`;
-      return;
-    }
-
-    let total = 0;
-
-    cart.forEach((item, index) => {
-      total += item.price * item.quantity;
-
-      const itemElement = document.createElement("div");
-      itemElement.className =
-        "flex justify-between items-center mb-3 border border-green-300 rounded-md px-4 py-3 bg-green-50";
-
-      itemElement.innerHTML = `
-        <span class="font-medium text-gray-800">${item.name} × ${
-        item.quantity
-      }</span>
-        <div class="flex items-center space-x-3">
-          <span class="text-green-700 font-semibold">৳${
-            item.price * item.quantity
-          }</span>
-          <button data-index="${index}" class="remove-btn text-gray-400 hover:text-red-600 font-bold text-xl cursor-pointer">&times;</button>
-        </div>
-      `;
-
-      cartItemsContainer.appendChild(itemElement);
-    });
-
-    // Divider line before total
-    const divider = document.createElement("hr");
-    divider.className = "border-t border-gray-300 mb-3";
-    cartItemsContainer.appendChild(divider);
-
-    cartTotal.textContent = `৳${total}`;
-  }
-
-  // 🟢 Add to Cart Button Handle
-  productContainer.addEventListener("click", function (event) {
-    if (event.target.classList.contains("add-to-cart")) {
-      const button = event.target;
-      const name = button.getAttribute("data-product-name");
-      const price = parseInt(button.getAttribute("data-product-price"));
-
-      // Check if item already in cart, increase quantity if yes
-      const existingIndex = cart.findIndex((item) => item.name === name);
-      if (existingIndex !== -1) {
-        cart[existingIndex].quantity += 1;
-      } else {
-        cart.push({ name, price, quantity: 1 });
-      }
-
-      alert(`${name} কার্টে যোগ হয়েছে!`);
-    }
-  });
-
-  // 🟡 Show Cart Button Handle
-  showCartButton.addEventListener("click", function () {
-    updateCartUI();
-  });
-
-  // Remove item event (event delegation)
-  cartItemsContainer.addEventListener("click", function (event) {
-    if (event.target.classList.contains("remove-btn")) {
-      const index = event.target.getAttribute("data-index");
-      cart.splice(index, 1);
-      updateCartUI();
-    }
-  });
-});
-
-//  Load All Products###################################################################################################################################
+//  Load All Products
 async function fetchProducts() {
   try {
     const response = await fetch(
@@ -275,7 +167,6 @@ async function fetchProducts() {
               <span>৳${product.price}</span>
             </div>
             <button 
-            id ="yuorCartBTN"
               class="add-to-cart bg-green-700 text-white px-6 py-2 rounded-full hover:bg-green-800 transition mt-3 w-full"
               data-product-name="${product.name}" 
               data-product-price="${product.price}">
@@ -326,3 +217,40 @@ async function loadCategories() {
 
 fetchProducts();
 loadCategories();
+// $$$$$$$###############################################################
+function updateCart() {
+  const container = document.getElementById("cart-items");
+  container.innerHTML = "";
+
+  if (cart.length === 0) {
+    container.innerHTML = `<p class="text-gray-500">Your cart is empty.</p>`;
+    document.getElementById("cart-total").innerText = "৳0";
+    return;
+  }
+
+  cart.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "flex justify-between items-center mb-2 border-b pb-2";
+
+    div.innerHTML = `
+      <span>${item.name} x ${item.quantity}</span>
+      <div>
+        <span>৳${(item.price * item.quantity).toFixed(2)}</span>
+        <button class="ml-2 text-red-500 remove-item" data-index="${index}">&times;</button>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  document.getElementById("cart-total").innerText = `৳${totalPrice.toFixed(2)}`;
+
+  // Remove item button
+  document.querySelectorAll(".remove-item").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const index = parseInt(btn.getAttribute("data-index"));
+      totalPrice -= cart[index].price * cart[index].quantity;
+      cart.splice(index, 1);
+      updateCart();
+    });
+  });
+}
