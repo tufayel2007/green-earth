@@ -31,7 +31,7 @@
   </head>
   <body>
     <header>
-      <!-- ✅ Include Alpine.js -->
+  
       <script
         src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
         defer
@@ -43,10 +43,10 @@
         x-data="{ open: false }"
       >
         <div class="container mx-auto px-4 flex justify-between items-center">
-          <!-- Logo -->
+    
           <div class="text-xl font-bold">Green Earth</div>
 
-          <!-- Desktop Menu -->
+      
           <div class="hidden md:flex space-x-6 items-center">
             <a href="#about" class="hover:text-green-200 transition">About</a>
             <a href="#gallery" class="hover:text-green-200 transition"
@@ -63,36 +63,12 @@
             </a>
           </div>
 
-          <!-- Mobile Menu Button -->
+  
           <button @click="open = !open" class="md:hidden focus:outline-none">
-            <svg
-              class="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                :class="{'hidden': open, 'inline-flex': !open }"
-                class="inline-flex"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              ></path>
-              <path
-                :class="{'hidden': !open, 'inline-flex': open }"
-                class="hidden"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
           </button>
         </div>
 
-        <!-- Mobile Menu -->
+
         <div x-show="open" class="md:hidden px-4 pt-4 pb-2 space-y-2">
           <a href="#about" class="block hover:text-green-200">About</a>
           <a href="#gallery" class="block hover:text-green-200">Gallery</a>
@@ -111,7 +87,7 @@
       <div
         class="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-6 md:px-12 md:py-2 relative z-10 overflow-hidden"
       >
-        <!-- Left Leaf -->
+
         <img
           src="./assets/hero-leaf1.png"
           alt="Leaf Left Mobile"
@@ -123,7 +99,7 @@
           class="hidden md:block w-60 lg:w-72 object-contain"
         />
 
-        <!-- Center Content -->
+
         <div class="text-center max-w-2xl mx-auto">
           <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800">
             Plant a Tree, Grow a Future
@@ -140,7 +116,6 @@
           </a>
         </div>
 
-        <!-- Right Leaf (mirrored) -->
         <img
           src="./assets/hero-leaf1.png"
           alt="Leaf Right Mobile"
@@ -154,35 +129,30 @@
       </div>
     </section>
 
-    <!-- Bottom White Wave -->
-    <div class="relative -mt-2">
-      <svg
-        class="w-full"
-        viewBox="0 0 1440 100"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill="#ffffff"
-          fill-opacity="1"
-          d="M0,64L60,58.7C120,53,240,43,360,32C480,21,600,11,720,10.7C840,11,960,21,1080,26.7C1200,32,1320,32,1380,32L1440,32L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
-        ></path>
-      </svg>
     </div>
-    <section class="bg-green-100">
+    <section class="bg-green-50 m-0">
       <div class="flex justify-center items-center">
-        <h2 class="text-5xl font-bold mb-6">Choose Your Trees</h2>
+        <h2 class="text-5xl font-bold mb-6"><span style="color: green;">Choose</span>
+ <span style="color: violet;">Your</span>
+     <span style="color: blue;">Trees</span></h2>
       </div>
       <!-- #############################  Categories  #################### -->
-      <div class="p-8 bg-green-100 grid grid-cols-5">
+      <div
+        class="p-8 bg-green-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      >
         <!-- Categories Section -->
-        <div class="bg-white h-140 p-3 rounded-lg shadow-md col-span-1">
-          <h2 class="text-xl font-bold mb-4">Categories</h2>
+        <div
+          class="bg-green-100 p-4 rounded shadow-md w-full mx-auto md:mx-0 md:max-w-xs"
+        >
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold mb-4 flex-1">Categories</h2>
+          </div>
           <div id="category-container" class="flex flex-col gap-2"></div>
         </div>
 
         <!-- disply cata -->
         <!-- Products Section -->
-        <div class="ml-8 col-span-3 bg-white">
+        <div class="ml-8 col-span-3 ">
           <div class="grid grid-cols-3 gap-6">
             <!-- Product Card -->
 
@@ -190,12 +160,12 @@
               id="product-container"
               class="grid grid-cols- sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch bg-white"
             >
-              <!-- কার্ড যোগ হবে -->
+              <!-- কার্ড  -->
             </div>
           </div>
         </div>
 
-        <!-- Cart Section -->
+
         <div
           id="cart"
           class="bg-white p-4 rounded-lg shadow-lg mt-6 w-full max-w-md"
@@ -207,30 +177,31 @@
             Total: <span class="cart-total">৳0</span>
           </p>
         </div>
+      </div>
 
-        <!-- About the Campaign -->
-        <div
-          class="flex flex-col items-center text-center text-4xl col-span-2 mt-5"
-        >
-          About the Campaign
-        </div>
+      <section class="bg-green-100 py-16 px-6 md:px-24 mt-20">
+        <div class="max-w-7xl mx-auto">
+      
+          <h2 class="text-center text-4xl font-semibold mb-12">
+            About the Campaign
+          </h2>
 
-        <section class="bg-green-100 py-16 px-6 md:px-24 mt-20">
+
           <div
             class="flex flex-col md:flex-row items-center md:items-start justify-center gap-12"
           >
-            <!-- Image Section -->
+       
             <div class="w-full md:w-1/2">
               <img
                 src="./assets/about.png"
                 alt="Green plant"
-                class="w-full max-w-md mx-auto"
+                class="w-full max-w-md mx-auto rounded"
               />
             </div>
 
-            <!-- Text Section -->
+      
             <div
-              class="w-full md:w-1/2 text-gray-800 text-sm md:text-base leading-relaxed mt-20"
+              class="w-full md:w-1/2 text-gray-800 text-sm md:text-base leading-relaxed mb-32 md:mt-16"
             >
               <p>
                 <strong>Green Earth</strong> is a global tree plantation
@@ -247,29 +218,29 @@
               </ul>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
       <!-- ###################################### Our Impact ################################ -->
-      <section class="bg-green-50 py-16 px-6 md:px-24 text-center">
+      <section class="bg-green-100 py-16 px-6 md:px-24 text-center">
         <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-12">
           Our Impact
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- Box 1 -->
-          <div class="bg-white rounded-lg p-8 shadow-sm">
+          <div class="bg-white hover:bg-green-400 rounded-lg p-8 shadow-sm">
             <h3 class="text-2xl font-bold text-green-600">500K+</h3>
             <p class="mt-2 text-gray-600">Trees Planted</p>
           </div>
 
           <!-- Box 2 -->
-          <div class="bg-white rounded-lg p-8 shadow-sm">
+          <div class="bg-white hover:bg-green-400 rounded-lg p-8 shadow-sm">
             <h3 class="text-2xl font-bold text-green-600">120+</h3>
             <p class="mt-2 text-gray-600">Communities Involved</p>
           </div>
 
           <!-- Box 3 -->
-          <div class="bg-white rounded-lg p-8 shadow-sm">
+          <div class="bg-white hover:bg-green-400 rounded-lg p-8 shadow-sm">
             <h3 class="text-2xl font-bold text-green-600">30+</h3>
             <p class="mt-2 text-gray-600">Countries Reached</p>
           </div>
@@ -316,7 +287,7 @@
       <!-- Footer -->
       <div class="bg-green-950 flex justify-center items-center">
         <p class="text-sm text-green-200">
-          © 2025 Green Earth. All Rights Reserved.
+        © 2025 Green Earth. All Rights Reserved.Thank you so much for visiting my website, Tufayel.
         </p>
       </div>
     </section>

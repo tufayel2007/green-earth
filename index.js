@@ -79,12 +79,20 @@ async function loadCategories() {
       const btn = document.createElement("button");
       btn.innerText = cat.category_name;
       btn.className =
-        "text-left bg-green-50 px-4 py-2 rounded hover:bg-green-200";
+        "text-left bg-green-50 px-4 py-2 rounded hover:bg-green-200 w-full";
+
       if (index === 0) {
         btn.classList.add("bg-green-300", "font-bold");
       }
 
       btn.addEventListener("click", () => {
+        const allButtons = container.querySelectorAll("button");
+        allButtons.forEach((b) => {
+          b.classList.remove("bg-green-300", "font-bold");
+        });
+
+        btn.classList.add("bg-green-300", "font-bold");
+
         fetchProductsByCategory(cat.id);
       });
 
@@ -94,6 +102,7 @@ async function loadCategories() {
     console.error("Failed to load categories:", error);
   }
 }
+
 // ####################################################################################################################### cart btn##############################################
 document.addEventListener("DOMContentLoaded", function () {
   const productContainer = document.getElementById("product-container");
@@ -102,14 +111,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let total = 0;
 
-  // Add to cart
+  // Event delegation to handle dynamically added buttons
   productContainer.addEventListener("click", function (event) {
     if (event.target.classList.contains("add-to-cart")) {
       const button = event.target;
       const name = button.getAttribute("data-product-name");
       const price = parseInt(button.getAttribute("data-product-price"));
 
-      // Create cart item div
+      // Add item to cart
       const cartItem = document.createElement("div");
       cartItem.classList.add(
         "flex",
@@ -124,117 +133,32 @@ document.addEventListener("DOMContentLoaded", function () {
       cartItem.innerHTML = `
         <span>${name}</span>
         <span>৳${price}</span>
-        <button class="remove-item text-red-500 font-bold ml-2">×</button>
+        <button class="remove-btn text-red-500 font-bold">Remove</button>
       `;
-
-      // Save price as data attribute for later removal
-      cartItem.setAttribute("data-price", price);
 
       cartItemsContainer.appendChild(cartItem);
 
-      // Update total
       total += price;
       cartTotal.textContent = `৳${total}`;
-    }
-  });
-
-  // Remove from cart
-  cartItemsContainer.addEventListener("click", function (event) {
-    if (event.target.classList.contains("remove-item")) {
-      const cartItem = event.target.parentElement;
-      const price = parseInt(cartItem.getAttribute("data-price"));
-
-      // Remove item from DOM
-      cartItemsContainer.removeChild(cartItem);
-
-      // Update total
-      total -= price;
-      cartTotal.textContent = `৳${total}`;
-    }
-  });
-});
-
-// ####################################################################################################################### cart btn end ##############################################
-document.addEventListener("DOMContentLoaded", function () {
-  const productContainer = document.getElementById("product-container");
-  const cartItemsContainer = document.querySelector(".cart-items");
-  const cartTotal = document.querySelector(".cart-total");
-  const showCartButton = document.getElementById("yourCartBTN");
-
-  const cart = [];
-
-  function updateCartUI() {
-    cartItemsContainer.innerHTML = "";
-
-    if (cart.length === 0) {
-      cartItemsContainer.innerHTML =
-        "<p class='text-gray-500'>কার্টে কিছু নেই</p>";
-      cartTotal.textContent = `৳0`;
-      return;
-    }
-
-    let total = 0;
-
-    cart.forEach((item, index) => {
-      total += item.price * item.quantity;
-
-      const itemElement = document.createElement("div");
-      itemElement.className =
-        "flex justify-between items-center mb-3 border border-green-300 rounded-md px-4 py-3 bg-green-50";
-
-      itemElement.innerHTML = `
-        <span class="font-medium text-gray-800">${item.name} × ${
-        item.quantity
-      }</span>
-        <div class="flex items-center space-x-3">
-          <span class="text-green-700 font-semibold">৳${
-            item.price * item.quantity
-          }</span>
-          <button data-index="${index}" class="remove-btn text-gray-400 hover:text-red-600 font-bold text-xl cursor-pointer">&times;</button>
-        </div>
-      `;
-
-      cartItemsContainer.appendChild(itemElement);
-    });
-
-    // Divider line before total
-    const divider = document.createElement("hr");
-    divider.className = "border-t border-gray-300 mb-3";
-    cartItemsContainer.appendChild(divider);
-
-    cartTotal.textContent = `৳${total}`;
-  }
-
-  // 🟢 Add to Cart Button Handle
-  productContainer.addEventListener("click", function (event) {
-    if (event.target.classList.contains("add-to-cart")) {
-      const button = event.target;
-      const name = button.getAttribute("data-product-name");
-      const price = parseInt(button.getAttribute("data-product-price"));
-
-      // Check if item already in cart, increase quantity if yes
-      const existingIndex = cart.findIndex((item) => item.name === name);
-      if (existingIndex !== -1) {
-        cart[existingIndex].quantity += 1;
-      } else {
-        cart.push({ name, price, quantity: 1 });
-      }
 
       alert(`${name} কার্টে যোগ হয়েছে!`);
     }
   });
 
-  // 🟡 Show Cart Button Handle
-  showCartButton.addEventListener("click", function () {
-    updateCartUI();
-  });
-
-  // Remove item event (event delegation)
+  // Handle removal of items from the cart
   cartItemsContainer.addEventListener("click", function (event) {
     if (event.target.classList.contains("remove-btn")) {
-      const index = event.target.getAttribute("data-index");
-      cart.splice(index, 1);
-      updateCartUI();
+      const cartItem = event.target.closest("div");
+      const price = parseInt(
+        cartItem.querySelector("span:nth-child(2)").textContent.slice(1)
+      );
+
+      cartItemsContainer.removeChild(cartItem);
+
+      total -= price;
+      cartTotal.textContent = `৳${total}`;
+
+      alert("আইটেমটি কার্ট থেকে মুছে ফেলা হয়েছে!");
     }
   });
 });
@@ -259,7 +183,7 @@ async function fetchProducts() {
       const card = document.createElement("div");
 
       card.innerHTML = `
-        <div class="max-w-xs flex flex-col justify-between rounded-lg shadow-lg p-4 m-4">
+        <div class=" bg-white max-w-xs flex flex-col justify-between rounded-lg shadow-lg p-4 m-4">
           <div>
             <div class="h-40 bg-gray-200 rounded-md overflow-hidden">
               <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover"/>
@@ -289,38 +213,6 @@ async function fetchProducts() {
     });
   } catch (error) {
     console.error("API থেকে ডেটা ফেচ করতে সমস্যা:", error);
-  }
-}
-
-async function loadCategories() {
-  try {
-    const res = await fetch(
-      "https://openapi.programming-hero.com/api/categories"
-    );
-    const data = await res.json();
-    const categories = data.categories;
-    const container = document.getElementById("category-container");
-    container.innerHTML = "";
-
-    categories.forEach((cat) => {
-      const btn = document.createElement("button");
-      btn.innerText = cat.category_name;
-      btn.dataset.id = cat.category_id;
-      ("px-4 py-2 mb-2 rounded bg-green-100 hover:bg-green-200 w-full");
-
-      btn.addEventListener("click", () => {
-        container
-          .querySelectorAll("button")
-          .forEach((b) => b.classList.remove("bg-green-300", "font-bold"));
-        btn.classList.add("bg-green-300", "font-bold");
-
-        fetchProductsByCategory(cat.id);
-      });
-
-      container.appendChild(btn);
-    });
-  } catch (error) {
-    console.error("Failed to load categories:", error);
   }
 }
 
